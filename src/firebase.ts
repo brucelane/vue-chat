@@ -15,6 +15,6 @@ firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
 
-const chatroomCollection = db.collection('chatrooms');
+const chatRoomCollection = db.collection('chatRoom');
 
-export { db, chatroomCollection };
+export { db, chatRoomCollection };
