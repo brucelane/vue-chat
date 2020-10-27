@@ -1,5 +1,6 @@
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
+import 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAtXzchY2Vs1P-A9ufzMsIpUjJG21NrSZU',
@@ -14,7 +15,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
+const auth = firebase.auth();
 
-const chatRoomCollection = db.collection('chatRoom');
+const chatCollection = db.collection('chat');
 
-export { db, chatRoomCollection };
+export { db, auth, chatCollection };
