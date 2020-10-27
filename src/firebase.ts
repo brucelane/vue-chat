@@ -2,6 +2,7 @@ import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import { userStore, User } from './providers/user-provider';
+import { Chat } from './providers/chats-provider';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAtXzchY2Vs1P-A9ufzMsIpUjJG21NrSZU',
@@ -20,6 +21,16 @@ const auth = firebase.auth();
 
 const chatCollection = db.collection('chat');
 const userCollection = db.collection('user');
+
+chatCollection.onSnapshot(snap => {
+  snap.docChanges().forEach(change => {
+    if (change.type === 'added') {
+      const chat = change.doc.data() as Chat;
+      console.log('added chat: ', chat);
+      userStore.addChatID(chat.id);
+    }
+  })
+})
 
 auth.onAuthStateChanged(async (auth) => {
   if (auth) {
