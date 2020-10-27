@@ -22,15 +22,23 @@ const auth = firebase.auth();
 const chatCollection = db.collection('chat');
 const userCollection = db.collection('user');
 
-chatCollection.onSnapshot(snap => {
-  snap.docChanges().forEach(change => {
+chatCollection.onSnapshot((snap) => {
+  snap.docChanges().forEach((change) => {
     if (change.type === 'added') {
       const chat = change.doc.data() as Chat;
-      console.log('added chat: ', chat);
-      userStore.addChatID(chat.id);
+      console.log('chat id: ', chat.id);
+      userCollection
+        .doc(auth.currentUser?.uid)
+        .set(
+          { chatIDs: firebase.firestore.FieldValue.arrayUnion(chat.id) },
+          { merge: true }
+        )
+        .then(() => {
+          userStore.addChatID(chat.id);
+        });
     }
-  })
-})
+  });
+});
 
 auth.onAuthStateChanged(async (auth) => {
   if (auth) {
