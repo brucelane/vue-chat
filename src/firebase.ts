@@ -1,6 +1,7 @@
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
+import { userStore, User } from './providers/user-provider';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAtXzchY2Vs1P-A9ufzMsIpUjJG21NrSZU',
@@ -19,5 +20,12 @@ const auth = firebase.auth();
 
 const chatCollection = db.collection('chat');
 const userCollection = db.collection('user');
+
+auth.onAuthStateChanged(async (auth) => {
+  if (auth) {
+    const user = (await userCollection.doc(auth.uid).get()).data() as User;
+    userStore.setUser(user);
+  }
+});
 
 export { db, auth, chatCollection, userCollection };
